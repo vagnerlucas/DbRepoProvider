@@ -95,6 +95,10 @@ namespace DBRepoProvider
             int index = 0;
 
             var procedure = contextHandler.Context.GetType().GetRuntimeMethods().Where(m => m.Name == procedureName).FirstOrDefault();
+
+            if (procedure == null)
+                throw new ArgumentException("Procedure not found. Check the full name in your DbContext");
+
             var procedureParams = procedure.GetParameters();
 
             List<ObjectParameter> dbParamList = new List<ObjectParameter>();
