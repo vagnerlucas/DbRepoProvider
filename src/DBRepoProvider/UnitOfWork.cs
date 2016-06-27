@@ -106,7 +106,7 @@ namespace DBRepoProvider
             {
                 ObjectParameter p;
                 if (index < paramsList.Length)
-                    p = new ObjectParameter(prop.Name, paramsList[index++]);
+                    p = new ObjectParameter(prop.Name, paramsList[index++] ?? DBNull.Value);
                 else
                     p = new ObjectParameter(prop.Name, DBNull.Value);
 
