@@ -65,26 +65,23 @@ namespace DBRepoProvider
 
             conn.Open();
 
-            var functionQuery = @"SELECT " + functionName + " (";
-
-            for (int i = 0; i < paramsList.Length; i++)
+            var sqlParamsList = new Dictionary<string, object>();
+            int count = 0;
+            foreach (var item in paramsList)
             {
-                if (paramsList[i].GetType() == Type.GetType("System.String") || (paramsList[i].GetType() == Type.GetType("System.DateTime")))
-                    functionQuery += "'" + paramsList[i].ToString() + "'";
-                else
-                    functionQuery += paramsList[i].ToString();
-
-                if (i < paramsList.Length - 1)
-                    functionQuery += ",";
-                else
-                    functionQuery += ")";
+                sqlParamsList.Add($":p{count++}", item);
             }
+            var keys = string.Join(",", sqlParamsList.Select(w => w.Key));
 
-            functionQuery += " AS FRESULT FROM DUAL";
+            var functionQuery = $"SELECT {functionName} ({keys}) AS FRESULT FROM DUAL";
 
             using (OracleCommand cmd = conn.CreateCommand() as OracleCommand)
             {
                 cmd.CommandText = functionQuery;
+                foreach (var item in sqlParamsList)
+                {
+                    cmd.Parameters.Add(new OracleParameter(item.Key, item.Value));
+                }
                 var dr = cmd.ExecuteScalar();
                 return dr;
             }
