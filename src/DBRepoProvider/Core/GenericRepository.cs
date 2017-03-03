@@ -44,5 +44,7 @@ namespace DBRepoProvider.Core
         {
             return context.Set<TEntity>().AsQueryable();
         }
+
+
     }
 }

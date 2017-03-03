@@ -9,6 +9,7 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace DBRepoProvider
 {
@@ -51,6 +52,11 @@ namespace DBRepoProvider
         public void Save()
         {
             contextHandler.Context.SaveChanges();
+        }
+
+        public Task<int> SaveAsync()
+        {
+            return contextHandler.Context.SaveChangesAsync();
         }
 
         public void Update()
@@ -105,6 +111,9 @@ namespace DBRepoProvider
                 if (index < paramsList.Length)
                     p = new ObjectParameter(prop.Name, paramsList[index++] ?? DBNull.Value);
                 else
+                {
+
+                }
                     p = new ObjectParameter(prop.Name, DBNull.Value);
 
                 dbParamList.Add(p);
